@@ -173,5 +173,5 @@ if __name__ == "__main__":
     # Example: 3 levels, 5 individuals per first-order group,
     # 3 first-order groups per second-order group,
     # 2 second-order groups per third-order group
-    sim = Simulation(group_sizes=[100, 1, 1])
+    sim = Simulation(group_sizes=[10, 3, 2])
     sim.run()

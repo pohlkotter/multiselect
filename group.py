@@ -74,7 +74,7 @@ class Group:
                     individual.cooperates = False
             # determine cooperation payoff by percentage of cooperating individuals
             no_of_cooperators = len([m for m in self.members if m.cooperates])
-            coop_gain = no_of_cooperators / len(self.members) / 4
+            coop_gain = no_of_cooperators / len(self.members) / 3
             logging.info("gain from %i cooperators: %f", no_of_cooperators, coop_gain)
             # apply payoff gain and costs fo
             for individual in self.members:  # type: ignore

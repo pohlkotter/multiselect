@@ -5,7 +5,7 @@ import random
 import pygame
 
 from constants import INDIVIDUAL_SIZE, MUTATION_CHANCE, COLOR_COOPERATOR, COLOR_PUNISHER, COLOR_DEFECTOR
-HAVE_PUNISHER = False
+HAVE_PUNISHER = True
 
 
 class Role(enum.Enum):

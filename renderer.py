@@ -182,6 +182,8 @@ class Renderer:
         instructions = [
             "Space: Advance simulation",
             "Up/Down: Change speed",
+            "s: Single Step modus",
+            "Right: Advance Single Step",
             "Click: Select group",
             "Esc: Quit"
         ]

@@ -1,5 +1,7 @@
 import logging
 import random
+from json.decoder import PosInf
+
 import pygame
 import numpy as np
 from typing import List, Optional, Tuple
@@ -40,6 +42,9 @@ class Simulation:
         self.current_stage = 0
         self.stage_connections = []
         self.connection_timer = 0
+
+        # whether single step modus is on or off
+        self.single_step_mode = False
 
         # Initialize the simulation
         self.root_group = self._create_hierarchy(group_sizes)
@@ -93,9 +98,11 @@ class Simulation:
             self.stage_connections = self.root_group.stage4_competition()
         elif self.current_stage == 4:  # Stage 5: Mutation
             self.root_group.stage5_mutation()
-        # Set connection timer
-        self.connection_timer = 30  # Show connections for 30 frames
 
+        if not self.single_step_mode:
+            self.connection_timer = 30  # Show connections for 30 frames
+        else:
+            self.connection_timer = PosInf
     def handle_events(self) -> bool:
         """Handle pygame events, return False if should quit"""
         for event in pygame.event.get():
@@ -111,6 +118,10 @@ class Simulation:
                     self.speed = min(self.speed * 1.5, 10.0)
                 elif event.key == pygame.K_DOWN:
                     self.speed = max(self.speed / 1.5, 0.1)
+                if event.key == pygame.K_s:  # Toggle single-step mode
+                    self.single_step_mode = not self.single_step_mode
+                elif event.key == pygame.K_RIGHT and self.single_step_mode:
+                    self.run_step()
 
             elif event.type == pygame.MOUSEBUTTONDOWN:
                 # Select group on click
@@ -128,11 +139,12 @@ class Simulation:
             # Handle events
             running = self.handle_events()
 
-            # Auto-advance based on speed
-            step_timer += self.speed
-            if step_timer >= 60:  # Advance every 60 / speed frames
-                self.run_step()
-                step_timer = 0
+            # If not single step mode, auto-advance based on speed
+            if not self.single_step_mode:
+                step_timer += self.speed
+                if step_timer >= 60: # Advance every 60 / speed frames
+                    self.run_step()
+                    step_timer = 0
 
             # Render
             self.renderer.render(
@@ -161,5 +173,5 @@ if __name__ == "__main__":
     # Example: 3 levels, 5 individuals per first-order group,
     # 3 first-order groups per second-order group,
     # 2 second-order groups per third-order group
-    sim = Simulation(group_sizes=[2, 1, 1])
+    sim = Simulation(group_sizes=[5, 4, 3])
     sim.run()

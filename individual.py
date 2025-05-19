@@ -28,6 +28,7 @@ class Individual:
         self.y = 0
         self.width = INDIVIDUAL_SIZE
         self.height = INDIVIDUAL_SIZE
+        self.members = None
 
     def reset_payoff(self):
         """Reset payoff to baseline"""
@@ -48,6 +49,7 @@ class Individual:
             old_role = self.role
             self.role = random.choice(new_roles)
             logging.info("mutated from %s to %s", old_role, self.role )
+
     def __repr__(self):
         return (f"Individual(role={self.role.name}, payoff={self.payoff:.2f}, "
                 f"cooperates={self.cooperates}, pos=({self.x}, {self.y}))")

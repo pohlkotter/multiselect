@@ -79,16 +79,12 @@ class Group:
                 if individual.cooperates:
                     individual.payoff -= COOPERATION_COST
                     individual.payoff += coop_gain
-                    individual.payoff = max(individual.payoff, 0.01)
-                    individual.payoff = min(individual.payoff, 1.00)
+                    self.sanitize_payoff(individual)
             self.log_members("stage1_cooperation")
         else:
             # For higher-order groups, apply to all subgroups
             for subgroup in self.members:  # type: ignore
                 subgroup.stage1_cooperation()
-
-    def log_members(self, stage):
-        logging.info("%s: %s", stage, repr(self.members))
 
     def stage2_punishment(self) -> List[tuple]:
         """Stage 2: Punishment stage, returns list of punisher-defector connections"""
@@ -115,6 +111,8 @@ class Group:
                     for defector in defectors:
                         punisher.payoff -= punisher_cost_per_defector
                         defector.payoff -= punishment_per_defector
+                        self.sanitize_payoff(punisher)
+                        self.sanitize_payoff(defector)
                         connections.append((punisher, defector))
             self.log_members("stage2_punishment")
         else:
@@ -214,6 +212,8 @@ class Group:
                     loser_index = self.members.index(loser)  # type: ignore
 
                     # Replace loser with clone of winner
+                    self.clone_coordinates(loser, winner_clone)
+
                     logging.info("loser %s will be replaced by winner %s", repr(loser), repr(winner))
                     self.members[loser_index] = winner_clone  # type: ignore
 
@@ -231,6 +231,22 @@ class Group:
         for individual in self.get_all_individuals():
             individual.mutate()
 
+    def sanitize_payoff(self, individual):
+        individual.payoff = max(individual.payoff, 0.01)
+        individual.payoff = min(individual.payoff, 1.00)
+
+    def log_members(self, stage):
+        logging.info("%s: %s", stage, repr(self.members))
+
+    def clone_coordinates(self, loser, winner_clone):
+        winner_clone.x = loser.x
+        winner_clone.y = loser.y
+        winner_clone.width = loser.width
+        winner_clone.height = loser.height
+        if winner_clone.members != None:
+            for (i, val) in enumerate(loser.members):
+                self.clone_coordinates(val, winner_clone.members[i])
+
     def render(self, surface, is_selected=False):
         """Render the group as a rectangle containing its members"""
         # Render frame
@@ -244,5 +260,8 @@ class Group:
         else:
             for subgroup in self.members:  # type: ignore
                 subgroup.render(surface)
+
+    def __repr__(self):
+        return ("[" + repr(self.members) +"]")
 
 

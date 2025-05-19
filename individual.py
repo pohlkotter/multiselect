@@ -5,6 +5,7 @@ import random
 import pygame
 
 from constants import INDIVIDUAL_SIZE, MUTATION_CHANCE, COLOR_COOPERATOR, COLOR_PUNISHER, COLOR_DEFECTOR
+HAVE_PUNISHER = False
 
 
 class Role(enum.Enum):
@@ -46,6 +47,8 @@ class Individual:
         if random.random() < MUTATION_CHANCE:
             # Choose a new role different from current one
             new_roles = [r for r in Role if r != self.role]
+            if not HAVE_PUNISHER:
+                new_roles = [r for r in new_roles if r != Role.PUNISHER]
             old_role = self.role
             self.role = random.choice(new_roles)
             logging.info("mutated from %s to %s", old_role, self.role )

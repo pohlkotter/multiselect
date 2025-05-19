@@ -3,9 +3,10 @@ ERROR_RATE = 0.05  # Error rate for cooperation (e)
 COOPERATION_COST = 0.2  # Cost of cooperation (20%)
 PUNISHMENT_COST = 0.8  # Cost to the punished individual (p)
 PUNISHER_COST = 0.2  # Cost to the punisher (k)
+LEARNING_RATE = 0.05  # Probability of individual learning from any other individual
 MIGRATION_RATE = 0.01  # Probability of interacting with other groups (m)
 COMPETITION_CHANCE = 0.1  # Chance of competition between groups
-MUTATION_CHANCE = 0.05  # Chance of mutation for each individual
+MUTATION_CHANCE = 0.02  # Chance of mutation for each individual
 
 # Colors
 COLOR_COOPERATOR = (0, 255, 0)  # Green
@@ -16,7 +17,7 @@ COLOR_SELECTION = (0, 0, 255)  # Blue
 COLOR_CONNECTION = (0, 0, 0)  # Black
 
 # Screen settings
-SCREEN_WIDTH = 1200
+SCREEN_WIDTH = 1400
 SCREEN_HEIGHT = 800
 INDIVIDUAL_SIZE = 20
 MARGIN = 5

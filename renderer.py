@@ -5,13 +5,13 @@ from typing import List, Optional, Tuple
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, INDIVIDUAL_SIZE, MARGIN, COLOR_COOPERATOR, COLOR_PUNISHER, \
     COLOR_DEFECTOR, COLOR_CONNECTION
 from group import Group
-from individual import Role, Individual
+from individual import Role, Individual, HAVE_PUNISHER
 
 
 class Renderer:
     """Class handling all UI-related aspects of the multi-level selection simulation"""
 
-    def __init__(self, screen_width: int = SCREEN_WIDTH, screen_height: int = SCREEN_HEIGHT):
+    def __init__(self, screen_width: int = SCREEN_WIDTH, screen_height: int = SCREEN_HEIGHT, havePunisher = True):
         """Initialize the renderer"""
         # Initialize pygame
         pygame.init()
@@ -23,6 +23,8 @@ class Renderer:
         # Store dimensions
         self.screen_width = screen_width
         self.screen_height = screen_height
+        self.havePunisher = havePunisher
+        self.single_step_mode = False
 
     def calculate_positions(self, root_group: Group, group_sizes: List[int]) -> None:
         """Calculate rendering positions for groups and individuals"""
@@ -157,7 +159,8 @@ class Renderer:
         self.screen.blit(stage_text, (20, 20))
 
         # Draw speed label
-        speed_text = self.font.render(f"Speed: {speed:.1f}x", True, (0, 0, 0))
+        speed_str = f"Speed: {speed:.1f}x" if not self.single_step_mode else f"Single Step Mode"
+        speed_text = self.font.render(speed_str, True, (0, 0, 0))
         self.screen.blit(speed_text, (20, 50))
 
         # Draw legend
@@ -166,6 +169,9 @@ class Renderer:
         legend_items = [
             ("Cooperator (C)", COLOR_COOPERATOR),
             ("Punisher (P)", COLOR_PUNISHER),
+            ("Defector (D)", COLOR_DEFECTOR)
+        ] if HAVE_PUNISHER else  [
+            ("Cooperator (C)", COLOR_COOPERATOR),
             ("Defector (D)", COLOR_DEFECTOR)
         ]
 
@@ -181,8 +187,8 @@ class Renderer:
         # Draw instructions
         instructions = [
             "Space: Advance simulation",
-            "Up/Down: Change speed",
-            "s: Single Step modus",
+            "Up/Down: Change speed ",
+            "s: Single Step modus: ",
             "Right: Advance Single Step",
             "Click: Select group",
             "Esc: Quit"

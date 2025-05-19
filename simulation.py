@@ -1,16 +1,13 @@
 import logging
+import math
 import random
-from json.decoder import PosInf
 
 import pygame
-import numpy as np
-from typing import List, Optional, Tuple
+from typing import List
 
-from constants import SCREEN_WIDTH, SCREEN_HEIGHT
 from group import Group
-from individual import Role, Individual
+from individual import Role, Individual, HAVE_PUNISHER
 from renderer import Renderer
-
 
 class Simulation:
     """Class managing the multi-level selection simulation"""
@@ -33,13 +30,15 @@ class Simulation:
         self.group_sizes = group_sizes
         self.initial_cooperator_ratio = initial_cooperator_ratio
         self.initial_punisher_ratio = initial_punisher_ratio
+        if not HAVE_PUNISHER:
+            self.initial_punisher_ratio = 0
 
         # Animation speed (frames per second)
         self.speed = 1.0
 
         # Current state
         self.selected_group = None
-        self.current_stage = 0
+        self.current_stage = -1
         self.stage_connections = []
         self.connection_timer = 0
 
@@ -50,7 +49,7 @@ class Simulation:
         self.root_group = self._create_hierarchy(group_sizes)
 
         # Initialize renderer
-        self.renderer = Renderer()
+        self.renderer = Renderer(havePunisher=HAVE_PUNISHER)
         self.renderer.calculate_positions(self.root_group, self.group_sizes)
 
     def _create_hierarchy(self, sizes: List[int], level: int = None) -> Group:
@@ -102,7 +101,7 @@ class Simulation:
         if not self.single_step_mode:
             self.connection_timer = 30  # Show connections for 30 frames
         else:
-            self.connection_timer = PosInf
+            self.connection_timer = math.inf
     def handle_events(self) -> bool:
         """Handle pygame events, return False if should quit"""
         for event in pygame.event.get():
@@ -120,6 +119,7 @@ class Simulation:
                     self.speed = max(self.speed / 1.5, 0.1)
                 if event.key == pygame.K_s:  # Toggle single-step mode
                     self.single_step_mode = not self.single_step_mode
+                    self.renderer.single_step_mode = self.single_step_mode
                 elif event.key == pygame.K_RIGHT and self.single_step_mode:
                     self.run_step()
 
@@ -173,5 +173,5 @@ if __name__ == "__main__":
     # Example: 3 levels, 5 individuals per first-order group,
     # 3 first-order groups per second-order group,
     # 2 second-order groups per third-order group
-    sim = Simulation(group_sizes=[5, 4, 3])
+    sim = Simulation(group_sizes=[100, 1, 1])
     sim.run()

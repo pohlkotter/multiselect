@@ -4,7 +4,7 @@ import pygame
 from typing import List, Union
 
 from constants import ERROR_RATE, PUNISHER_COST, PUNISHMENT_COST, COMPETITION_CHANCE, COLOR_GROUP_FRAME, \
-    COLOR_SELECTION, MIGRATION_RATE, COOPERATION_COST
+    COLOR_SELECTION, MIGRATION_RATE, COOPERATION_COST, LEARNING_RATE
 from individual import Individual, Role
 from individual_renderer import IndividualRenderer
 
@@ -69,17 +69,17 @@ class Group:
                 # Determine if the individual cooperates based on role and error rate
                 if individual.role == Role.COOPERATOR or individual.role == Role.PUNISHER:
                     individual.cooperates = random.random() > ERROR_RATE
+                    individual.payoff -= COOPERATION_COST
                 else:  # Role.DEFECTOR
                     individual.cooperates = False
             # determine cooperation payoff by percentage of cooperating individuals
-            coop_gain = len([ m for m in self.members if m.cooperates]) / len(self.members)
+            no_of_cooperators = len([m for m in self.members if m.cooperates])
+            coop_gain = no_of_cooperators / len(self.members) / 4
+            logging.info("gain from %i cooperators: %f", no_of_cooperators, coop_gain)
             # apply payoff gain and costs fo
             for individual in self.members:  # type: ignore
-                # Apply cooperation cost if the individual cooperates
-                if individual.cooperates:
-                    individual.payoff -= COOPERATION_COST
-                    individual.payoff += coop_gain
-                    self.sanitize_payoff(individual)
+                individual.payoff += coop_gain
+                self.sanitize_payoff(individual)
             self.log_members("stage1_cooperation")
         else:
             # For higher-order groups, apply to all subgroups
@@ -132,6 +132,7 @@ class Group:
 
             # For each individual in each first-order group
             for group_idx, group in enumerate(first_order_groups):
+                learning_individuals = [i for i in group.members if random.random() < LEARNING_RATE]
                 for individual in group.members:  # type: ignore
                     # Determine if interaction is within-group or between-group
                     if random.random() < MIGRATION_RATE:

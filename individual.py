@@ -1,4 +1,5 @@
 import enum
+import logging
 import random
 
 import pygame
@@ -44,35 +45,9 @@ class Individual:
         if random.random() < MUTATION_CHANCE:
             # Choose a new role different from current one
             new_roles = [r for r in Role if r != self.role]
+            old_role = self.role
             self.role = random.choice(new_roles)
-
-    def render(self, surface):
-        """Render the individual as a square with appropriate color"""
-        # Draw the frame
-        pygame.draw.rect(surface, (50, 50, 50), (self.x, self.y, self.width, self.height), 1)
-
-        # Determine color based on role
-        if self.role == Role.COOPERATOR:
-            color = COLOR_COOPERATOR
-        elif self.role == Role.PUNISHER:
-            color = COLOR_PUNISHER
-        else:  # Role.DEFECTOR
-            color = COLOR_DEFECTOR
-
-        # Fill based on payoff (from bottom up)
-        fill_height = int(self.payoff * self.height)
-        if fill_height > 0:
-            pygame.draw.rect(surface, color,
-                             (self.x, self.y + self.height - fill_height,
-                              self.width, fill_height))
-
-        # Draw checkmark if cooperates
-        if self.cooperates:
-            # Simple checkmark
-            pygame.draw.line(surface, (255, 255, 255),
-                             (self.x + 3, self.y + self.height - 7),
-                             (self.x + 7, self.y + self.height - 3), 2)
-            pygame.draw.line(surface, (255, 255, 255),
-                             (self.x + 7, self.y + self.height - 3),
-                             (self.x + self.width - 3, self.y + self.height - 10), 2)
-
+            logging.info("mutated from %s to %s", old_role, self.role )
+    def __repr__(self):
+        return (f"Individual(role={self.role.name}, payoff={self.payoff:.2f}, "
+                f"cooperates={self.cooperates}, pos=({self.x}, {self.y}))")

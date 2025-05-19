@@ -1,3 +1,4 @@
+import logging
 import random
 import pygame
 from typing import List, Union
@@ -5,6 +6,7 @@ from typing import List, Union
 from constants import ERROR_RATE, PUNISHER_COST, PUNISHMENT_COST, COMPETITION_CHANCE, COLOR_GROUP_FRAME, \
     COLOR_SELECTION, MIGRATION_RATE, COOPERATION_COST
 from individual import Individual, Role
+from individual_renderer import IndividualRenderer
 
 
 class Group:
@@ -76,13 +78,17 @@ class Group:
                 # Apply cooperation cost if the individual cooperates
                 if individual.cooperates:
                     individual.payoff -= COOPERATION_COST
-            individual.payoff += coop_gain
-            individual.payoff = max(individual.payoff, 0.01)
-            individual.payoff = min(individual.payoff, 1.00)
+                    individual.payoff += coop_gain
+                    individual.payoff = max(individual.payoff, 0.01)
+                    individual.payoff = min(individual.payoff, 1.00)
+            self.log_members("stage1_cooperation")
         else:
             # For higher-order groups, apply to all subgroups
             for subgroup in self.members:  # type: ignore
                 subgroup.stage1_cooperation()
+
+    def log_members(self, stage):
+        logging.info("%s: %s", stage, repr(self.members))
 
     def stage2_punishment(self) -> List[tuple]:
         """Stage 2: Punishment stage, returns list of punisher-defector connections"""
@@ -110,6 +116,7 @@ class Group:
                         punisher.payoff -= punisher_cost_per_defector
                         defector.payoff -= punishment_per_defector
                         connections.append((punisher, defector))
+            self.log_members("stage2_punishment")
         else:
             # For higher-order groups, apply to all first-order subgroups
             for group in self.get_first_order_groups():
@@ -153,6 +160,8 @@ class Group:
                     if random.random() < (p_c / (p_c + p_i)):
                         individual.role = chosen_individual.role
                         connections.append((individual, chosen_individual))
+                logging.info("stage3_learning: %s", repr(group.members))
+
         elif self.level > 2:
             # For higher-order groups, apply to all second-order subgroups
             for subgroup in self.members:  # type: ignore
@@ -205,6 +214,7 @@ class Group:
                     loser_index = self.members.index(loser)  # type: ignore
 
                     # Replace loser with clone of winner
+                    logging.info("loser %s will be replaced by winner %s", repr(loser), repr(winner))
                     self.members[loser_index] = winner_clone  # type: ignore
 
                     connections.append((winner, loser))
@@ -226,11 +236,11 @@ class Group:
         # Render frame
         frame_color = COLOR_SELECTION if is_selected else COLOR_GROUP_FRAME
         pygame.draw.rect(surface, frame_color, (self.x, self.y, self.width, self.height), 2)
-
+        renderer = IndividualRenderer()
         # Render members
         if self.is_first_order():
             for individual in self.members:  # type: ignore
-                individual.render(surface)
+                renderer.render(individual, surface)
         else:
             for subgroup in self.members:  # type: ignore
                 subgroup.render(surface)

@@ -5,7 +5,6 @@ from typing import List, Optional, Tuple
 from constants import SCREEN_WIDTH, SCREEN_HEIGHT, INDIVIDUAL_SIZE, MARGIN, COLOR_COOPERATOR, COLOR_PUNISHER, \
     COLOR_DEFECTOR, COLOR_CONNECTION
 from group import Group
-from individual import Role, Individual, HAVE_PUNISHER
 
 
 class Renderer:
@@ -19,7 +18,7 @@ class Renderer:
         pygame.display.set_caption("Multi-Level Selection Simulation")
         self.clock = pygame.time.Clock()
         self.font = pygame.font.SysFont(None, 24)
-
+        self.havePunisher = havePunisher
         # Store dimensions
         self.screen_width = screen_width
         self.screen_height = screen_height
@@ -170,7 +169,7 @@ class Renderer:
             ("Cooperator (C)", COLOR_COOPERATOR),
             ("Punisher (P)", COLOR_PUNISHER),
             ("Defector (D)", COLOR_DEFECTOR)
-        ] if HAVE_PUNISHER else  [
+        ] if self.havePunisher else  [
             ("Cooperator (C)", COLOR_COOPERATOR),
             ("Defector (D)", COLOR_DEFECTOR)
         ]

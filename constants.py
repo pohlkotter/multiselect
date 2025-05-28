@@ -2,10 +2,10 @@
 ERROR_RATE = 0.05  # Error rate for cooperation (e)
 COOPERATION_COST = 0.2  # Cost of cooperation (20%)
 PUNISHMENT_COST = 0.8  # Cost to the punished individual (p)
-PUNISHER_COST = 0.2  # Cost to the punisher (k)
+PUNISHER_COST = 0.0  # Cost to the punisher (k)
 LEARNING_RATE = 0.05  # Probability of individual learning from any other individual
 MIGRATION_RATE = 0.01  # Probability of interacting with other groups (m)
-COMPETITION_CHANCE = 0.1  # Chance of competition between groups
+COMPETITION_CHANCE = 0.2  # Chance of competition between groups
 MUTATION_CHANCE = 0.02  # Chance of mutation for each individual
 
 # Colors

@@ -2,11 +2,7 @@ import enum
 import logging
 import random
 
-import pygame
-
-from constants import INDIVIDUAL_SIZE, MUTATION_CHANCE, COLOR_COOPERATOR, COLOR_PUNISHER, COLOR_DEFECTOR
-HAVE_PUNISHER = True
-
+from constants import INDIVIDUAL_SIZE, MUTATION_CHANCE
 
 class Role(enum.Enum):
     """Enum for individual roles"""
@@ -18,11 +14,12 @@ class Role(enum.Enum):
 class Individual:
     """Class representing an individual in the simulation"""
 
-    def __init__(self, role: Role = None):
+    def __init__(self, role: Role = None, have_punisher = True):
         """Initialize an individual with given role or random role"""
         self.role = role if role else random.choice(list(Role))
         self.payoff = 1.0  # Start with baseline payoff
         self.cooperates = None  # Will be set during the cooperation stage
+        self.have_punisher = have_punisher
 
         # Position for rendering
         self.x = 0
@@ -37,7 +34,7 @@ class Individual:
 
     def clone(self):
         """Create a copy of this individual"""
-        clone = Individual(self.role)
+        clone = Individual(self.role, self.have_punisher)
         clone.payoff = self.payoff
         clone.cooperates = self.cooperates
         return clone
@@ -47,7 +44,7 @@ class Individual:
         if random.random() < MUTATION_CHANCE:
             # Choose a new role different from current one
             new_roles = [r for r in Role if r != self.role]
-            if not HAVE_PUNISHER:
+            if not self.have_punisher:
                 new_roles = [r for r in new_roles if r != Role.PUNISHER]
             old_role = self.role
             self.role = random.choice(new_roles)

@@ -73,7 +73,8 @@ class Group:
                 else:  # Role.DEFECTOR
                     individual.cooperates = False
             # determine cooperation payoff by percentage of cooperating individuals
-            no_of_cooperators = len([m for m in self.members if m.cooperates])
+            no_of_cooperators = (len([m for m in self.members if m.role == Role.COOPERATOR and m.cooperates]) +
+                                 0.6 * len([m for m in self.members if m.role == Role.COOPERATOR and m.cooperates]))
             coop_gain = no_of_cooperators / len(self.members) / 3
             logging.info("gain from %i cooperators: %f", no_of_cooperators, coop_gain)
             # apply payoff gain and costs fo
@@ -97,9 +98,6 @@ class Group:
 
             # Each punisher punishes all defectors
             for punisher in punishers:
-                if not defectors:
-                    continue  # Skip if no defectors to punish
-
                 n = len(defectors)  # Number of defectors
 
                 # Each punisher pays a cost to punish each defector
@@ -264,5 +262,3 @@ class Group:
 
     def __repr__(self):
         return ("[" + repr(self.members) +"]")
-
-

@@ -212,19 +212,22 @@ class Renderer:
             # Draw dotted line
             self.draw_dotted_line(self.screen, COLOR_CONNECTION, start_pos, end_pos)
 
-    def draw_dotted_line(self, surface, color, start_pos, end_pos, width=2, dot_spacing=10):
+    def draw_dotted_line(self, surface, color, start_pos, end_pos, width=1, dot_spacing=10):
         """Draw a dotted line between two points using circles as dots."""
         dx = end_pos[0] - start_pos[0]
         dy = end_pos[1] - start_pos[1]
         distance = max(1, (dx ** 2 + dy ** 2) ** 0.5)
 
         # Number of dots
-        num_dots = int(distance // dot_spacing) + 1
+        num_dots = int(4 * distance // dot_spacing) + 1
 
         for i in range(num_dots + 1):
             x = start_pos[0] + dx * i / num_dots
             y = start_pos[1] + dy * i / num_dots
             pygame.draw.circle(surface, color, (int(x), int(y)), width)
+
+        # draw a bigger circle at the end
+        pygame.draw.circle(surface, color, (int(end_pos[0]), int(end_pos[1])), width * 3)
 
     def get_clock(self):
         """Get the pygame clock object"""

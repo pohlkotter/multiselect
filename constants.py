@@ -1,8 +1,13 @@
 # Constants
+INITIAL_COOPERATOR_RATIO = 0
+INITIAL_PUNISHER_RATIO = 1
+
 ERROR_RATE = 0.05  # Error rate for cooperation (e)
-COOPERATION_COST = 0.2  # Cost of cooperation (20%)
+COOPERATION_COST = 0.2  # Cost of cooperation
+COOPERATION_GAIN = 0.4 # Gain of cooperation
+UPKEEP_COST = 0.05 # Cost of daily life to upkeep status quo
 PUNISHMENT_COST = 0.8  # Cost to the punished individual (p)
-PUNISHER_COST = 0.0  # Cost to the punisher (k)
+PUNISHER_COST = 0.2  # Cost to the punisher (k)
 LEARNING_RATE = 0.05  # Probability of individual learning from any other individual
 MIGRATION_RATE = 0.01  # Probability of interacting with other groups (m)
 COMPETITION_CHANCE = 0.2  # Chance of competition between groups

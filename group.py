@@ -4,7 +4,7 @@ import pygame
 from typing import List, Union
 
 from constants import ERROR_RATE, PUNISHER_COST, PUNISHMENT_COST, COMPETITION_CHANCE, COLOR_GROUP_FRAME, \
-    COLOR_SELECTION, MIGRATION_RATE, COOPERATION_COST, LEARNING_RATE
+    COLOR_SELECTION, MIGRATION_RATE, COOPERATION_COST, LEARNING_RATE, UPKEEP_COST, COOPERATION_GAIN
 from individual import Individual, Role
 from individual_renderer import IndividualRenderer
 
@@ -74,12 +74,12 @@ class Group:
                     individual.cooperates = False
             # determine cooperation payoff by percentage of cooperating individuals
             no_of_cooperators = (len([m for m in self.members if m.role == Role.COOPERATOR and m.cooperates]) +
-                                 0.6 * len([m for m in self.members if m.role == Role.COOPERATOR and m.cooperates]))
-            coop_gain = no_of_cooperators / len(self.members) / 3
+                                 0.6 * len([m for m in self.members if m.role == Role.PUNISHER and m.cooperates]))
+            coop_gain = no_of_cooperators / len(self.members) * COOPERATION_GAIN
             logging.info("gain from %i cooperators: %f", no_of_cooperators, coop_gain)
             # apply payoff gain and costs fo
             for individual in self.members:  # type: ignore
-                individual.payoff += coop_gain
+                individual.payoff += coop_gain - UPKEEP_COST
                 self.sanitize_payoff(individual)
             self.log_members("stage1_cooperation")
         else:
@@ -94,7 +94,7 @@ class Group:
         if self.is_first_order():
             # Get all punishers and non-cooperators in this group
             punishers = [ind for ind in self.members if ind.role == Role.PUNISHER]  # type: ignore
-            defectors = [ind for ind in self.members if not ind.cooperates]  # type: ignore
+            defectors = [ind for ind in self.members if ind.role == Role.DEFECTOR]  # type: ignore
 
             # Each punisher punishes all defectors
             for punisher in punishers:

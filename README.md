@@ -44,4 +44,6 @@ I want to write an object-oriented, graphical simulation in python that demonstr
   4.5 The individual stages shows for each selected group or individual a black frame and a briefly displayed dotted line for the individuals or groups interacting:  
     4.5.1 In Stage 2 it connects the punisher and the defectors in the group while punishing is done  
     4.5.2 In Stage 3 it connects i with c while learning is done  
-    4.5.3 In Stage 4 it connects the two subgroups that compeate wich each other  
+    4.5.3 In Stage 4 it connects the two subgroups that compeate wich each other
+
+5\. The code shall be organized in small maintainable files with constants all in a separate file

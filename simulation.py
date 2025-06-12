@@ -5,6 +5,7 @@ import random
 import pygame
 from typing import List
 
+from constants import INITIAL_COOPERATOR_RATIO, INITIAL_PUNISHER_RATIO
 from group import Group
 from individual import Role, Individual
 from renderer import Renderer
@@ -20,8 +21,8 @@ class Simulation:
     def __init__(self,
                  group_sizes: List[int],
                  have_punisher = True,
-                 initial_cooperator_ratio: float = 0.33,
-                 initial_punisher_ratio: float = 0.33):
+                 initial_cooperator_ratio: float = INITIAL_COOPERATOR_RATIO,
+                 initial_punisher_ratio: float = INITIAL_PUNISHER_RATIO):
         """
         Initialize the simulation with hierarchical groups
 
@@ -179,13 +180,13 @@ if __name__ == "__main__":
     # individuals per group, first level groups, second leve groups
 
     # single group scenario, no punishers
-    # sim = Simulation(group_sizes=[50, 1, 1], initial_cooperator_ratio=0.9, have_punisher=False)
+    #sim = Simulation(group_sizes=[50, 1, 1], initial_cooperator_ratio=0.9, have_punisher=False)
 
     # multiple group scenario, no punishers
-    sim = Simulation(group_sizes=[50, 1, 6], initial_cooperator_ratio=0.5, have_punisher=False)
+    #sim = Simulation(group_sizes=[50, 1, 6], initial_cooperator_ratio=0.5, have_punisher=False)
 
     # single group scenario, few punishers
-    #sim = Simulation(group_sizes=[50, 1, 1], initial_cooperator_ratio=0.4, initial_punisher_ratio=0.1, have_punisher=True)
+    sim = Simulation(group_sizes=[50, 1, 1], initial_cooperator_ratio=0.4, initial_punisher_ratio=0.1, have_punisher=True)
 
     # single group scenario, many punishers
     #sim = Simulation(group_sizes=[50, 1, 1], initial_cooperator_ratio=0.4, initial_punisher_ratio=0.4, have_punisher=True)

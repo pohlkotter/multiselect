@@ -131,7 +131,7 @@ class Group:
             # For each individual in each first-order group
             for group_idx, group in enumerate(first_order_groups):
                 learning_individuals = [i for i in group.members if random.random() < LEARNING_RATE]
-                for individual in group.members:  # type: ignore
+                for individual in learning_individuals:  # type: ignore
                     # Determine if interaction is within-group or between-group
                     if random.random() < MIGRATION_RATE:
                         # Between-group interaction: choose a random different group
@@ -154,7 +154,7 @@ class Group:
                     p_i = max(individual.payoff, 0.01)  # Ensure non-zero
                     p_c = max(chosen_individual.payoff, 0.01)  # Ensure non-zero
 
-                    if random.random() < (p_c / (p_c + p_i)):
+                    if random.random() < (p_c / (p_c + p_i)) and individual.role != chosen_individual.role:
                         individual.role = chosen_individual.role
                         connections.append((individual, chosen_individual))
                 logging.info("stage3_learning: %s", repr(group.members))

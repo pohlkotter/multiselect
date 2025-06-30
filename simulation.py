@@ -180,18 +180,18 @@ if __name__ == "__main__":
     # individuals per group, first level groups, second leve groups
 
     # single group scenario, no punishers
-    #sim = Simulation(group_sizes=[50, 1, 1], initial_cooperator_ratio=0.9, have_punisher=False)
+    sim = Simulation(group_sizes=[6, 1, 1], initial_cooperator_ratio=0.5, have_punisher=False)
 
     # multiple group scenario, no punishers
     #sim = Simulation(group_sizes=[50, 1, 6], initial_cooperator_ratio=0.5, have_punisher=False)
 
     # single group scenario, few punishers
-    sim = Simulation(group_sizes=[50, 1, 1], initial_cooperator_ratio=0.4, initial_punisher_ratio=0.1, have_punisher=True)
+    #sim = Simulation(group_sizes=[50, 1, 1], initial_cooperator_ratio=0.4, initial_punisher_ratio=0.1, have_punisher=True)
 
     # single group scenario, many punishers
     #sim = Simulation(group_sizes=[50, 1, 1], initial_cooperator_ratio=0.4, initial_punisher_ratio=0.4, have_punisher=True)
 
     # multiple group scenario, many punishers
-    #sim = Simulation(group_sizes=[5, 3, 3])#, initial_cooperator_ratio=0.4, initial_punisher_ratio=0.4, have_punisher=True)
+    #sim = Simulation(group_sizes=[20, 3, 3], initial_cooperator_ratio=0.4, initial_punisher_ratio=0.4, have_punisher=True)
 
     sim.run()

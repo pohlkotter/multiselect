@@ -1,3 +1,5 @@
+A graphical simulation of cultural evolution. Inspired by https://bookdown.org/amesoudi/ABMtutorial_bookdown/model11.html and https://peterturchin.com/book/ultrasociety/
+
 Prompt:
 I want to write an object-oriented, graphical simulation in python that demonstrates multi-level selection the rules are as follows:
 
